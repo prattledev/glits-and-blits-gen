@@ -9,6 +9,17 @@ Generates spec-correct GLITS and BLITS line-up tones for broadcast audio enginee
 
 ## Running
 
+### Docker (primary)
+
+```bash
+docker compose up --build
+# App: http://localhost (port 80)
+```
+
+Frontend is built by the nginx container (multi-stage); nginx proxies `/api` to the backend container.
+
+### Manual (development)
+
 ```bash
 ./start.sh
 # Backend:  http://localhost:8000
@@ -23,6 +34,13 @@ cd backend && .venv/bin/uvicorn main:app --port 8000
 # Frontend
 cd frontend && npm run dev -- --port 5173
 ```
+
+## Docker layout
+
+- `backend/Dockerfile` — python:3.13-slim + libsndfile1, runs uvicorn on port 8000 (internal only)
+- `frontend/Dockerfile` — multi-stage: node:22-alpine build → nginx:alpine serve
+- `frontend/nginx.conf` — serves `/usr/share/nginx/html`, proxies `/api` → `http://backend:8000`
+- `docker-compose.yml` — frontend exposed on 80, backend internal
 
 ## Backend
 
@@ -58,7 +76,7 @@ All parameters are hardcoded per EBU spec:
 - S2 (4.8–10.2 s): stereo ident at 1 kHz @ −18 dBFS; R continuous, L discontinuous pattern
 - S3 (10.2–13.4 s): all channels in-phase 2 kHz @ −24 dBFS, 3 s on, 200 ms silence
 
-### Python environment
+### Python environment (manual)
 
 ```bash
 cd backend
@@ -70,4 +88,4 @@ python3 -m venv .venv
 
 - `src/components/ToneForm.tsx` — tone type selector, repetitions control, download logic
 - `src/components/StatusPanel.tsx` — status display and broadcast reference table
-- Vite proxy: `/api` → `http://localhost:8000`
+- Vite proxy: `/api` → `http://localhost:8000` (dev only; nginx handles this in production)

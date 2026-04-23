@@ -39,9 +39,21 @@ All other parameters are fixed per EBU spec: −18 dBFS alignment level, 48 kHz 
 
 ---
 
-## Setup
+## Running
 
-**Requirements:** Python 3.11+, Node.js 18+
+**Requirements:** Docker
+
+```bash
+docker compose up --build
+```
+
+Open **http://localhost** in your browser.
+
+---
+
+## Development (without Docker)
+
+**Requirements:** Python 3.13+, Node.js 18+
 
 ### Backend
 
@@ -58,9 +70,7 @@ cd frontend
 npm install
 ```
 
----
-
-## Running
+### Start
 
 ```bash
 ./start.sh
