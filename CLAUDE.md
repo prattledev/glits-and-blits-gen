@@ -1,4 +1,4 @@
-# Broadcast Test Tone Generator
+# GLITS & BLITS Generator
 
 Generates spec-correct GLITS and BLITS line-up tones for broadcast audio engineers.
 
@@ -12,8 +12,9 @@ Generates spec-correct GLITS and BLITS line-up tones for broadcast audio enginee
 ### Docker (primary)
 
 ```bash
+cp .env.example .env  # add TUNNEL_TOKEN
 docker compose up --build
-# App: http://localhost:8080
+# App: http://localhost:8080 or via Cloudflare tunnel
 ```
 
 Frontend is built by the nginx container (multi-stage); nginx proxies `/api` to the backend container.
@@ -40,7 +41,8 @@ cd frontend && npm run dev -- --port 5173
 - `backend/Dockerfile` — python:3.13-slim + libsndfile1, runs uvicorn on port 8000 (internal only)
 - `frontend/Dockerfile` — multi-stage: node:22-alpine build → nginx:alpine serve
 - `frontend/nginx.conf` — serves `/usr/share/nginx/html`, proxies `/api` → `http://backend:8000`
-- `docker-compose.yml` — frontend exposed on 8080, backend internal
+- `docker-compose.yml` — frontend on 8080, backend internal, cloudflared tunnel
+- `.env` — `TUNNEL_TOKEN` (gitignored); copy from `.env.example`
 
 ## Backend
 

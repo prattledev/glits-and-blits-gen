@@ -43,11 +43,20 @@ All other parameters are fixed per EBU spec: −18 dBFS alignment level, 48 kHz 
 
 **Requirements:** Docker
 
+1. Copy the example env file and add your Cloudflare tunnel token:
+
+```bash
+cp .env.example .env
+# edit .env and set TUNNEL_TOKEN
+```
+
+2. Start:
+
 ```bash
 docker compose up --build
 ```
 
-Open **http://localhost:8080** in your browser.
+Open **http://localhost:8080** in your browser, or via your Cloudflare tunnel URL.
 
 ---
 
