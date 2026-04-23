@@ -40,7 +40,7 @@ cd frontend && npm run dev -- --port 5173
 - `backend/Dockerfile` — python:3.13-slim + libsndfile1, runs uvicorn on port 8000 (internal only)
 - `frontend/Dockerfile` — multi-stage: node:22-alpine build → nginx:alpine serve
 - `frontend/nginx.conf` — serves `/usr/share/nginx/html`, proxies `/api` → `http://backend:8000`
-- `docker-compose.yml` — frontend exposed on 80, backend internal
+- `docker-compose.yml` — frontend exposed on 8080, backend internal
 
 ## Backend
 
@@ -86,6 +86,8 @@ python3 -m venv .venv
 
 ## Frontend
 
-- `src/components/ToneForm.tsx` — tone type selector, repetitions control, download logic
-- `src/components/StatusPanel.tsx` — status display and broadcast reference table
+Single page, centered layout. No decorative elements.
+
+- `src/App.tsx` — page shell, centres `ToneForm`
+- `src/components/ToneForm.tsx` — tone type selector, repetitions slider, generate button, inline status
 - Vite proxy: `/api` → `http://localhost:8000` (dev only; nginx handles this in production)

@@ -1,6 +1,6 @@
-# Lineup Tone Generator
+# GLITS & BLITS Generator
 
-A web app for generating broadcast-standard GLITS and BLITS line-up tones, built for broadcast audio engineers.
+A minimal web app for generating broadcast-standard GLITS and BLITS line-up tones, built for broadcast audio engineers.
 
 Outputs 24-bit PCM WAV at 48 kHz with correct `WAVE_FORMAT_EXTENSIBLE` headers.
 
@@ -77,7 +77,7 @@ npm install
 ```
 
 - Frontend: http://localhost:5173
-- Backend API: http://localhost:8080
+- Backend API: http://localhost:8000
 
 ---
 
