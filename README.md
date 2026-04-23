@@ -47,7 +47,7 @@ All other parameters are fixed per EBU spec: −18 dBFS alignment level, 48 kHz 
 docker compose up --build
 ```
 
-Open **http://localhost** in your browser.
+Open **http://localhost:8000** in your browser.
 
 ---
 
