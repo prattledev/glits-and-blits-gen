@@ -1,12 +1,19 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from typing import Literal
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from generators import generate_glits, generate_blits, to_wav_bytes
 
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(title="GLITS & BLITS Generator")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +32,8 @@ class ToneRequest(BaseModel):
 
 
 @app.post("/api/generate")
-async def generate_tone(req: ToneRequest):
+@limiter.limit("10/minute")
+async def generate_tone(req: ToneRequest, request: Request):
     try:
         if req.tone_type == "glits":
             audio    = generate_glits(req.repetitions * 4.0, SAMPLE_RATE, ALIGNMENT_DBFS)
