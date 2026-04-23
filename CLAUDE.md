@@ -1,6 +1,6 @@
 # Broadcast Test Tone Generator
 
-Generates spec-correct GLITS and BLITS test tones for broadcast audio engineers.
+Generates spec-correct GLITS and BLITS line-up tones for broadcast audio engineers.
 
 ## Stack
 
@@ -31,29 +31,32 @@ Single endpoint: `POST /api/generate`
 ```json
 {
   "tone_type": "glits" | "blits",
-  "repetitions": 1,
-  "sample_rate": 44100 | 48000 | 96000,
-  "amplitude_dbfs": -18.0
+  "repetitions": 1
 }
 ```
 
 Returns a 24-bit PCM WAV file (`WAVE_FORMAT_EXTENSIBLE`).
 
+All parameters are hardcoded per EBU spec:
+- Sample rate: **48 kHz**
+- Alignment level: **−18 dBFS** (EBU R68)
+- BLITS S3 level: **−24 dBFS** (−6 dB below alignment)
+
 ### Tone specs
 
-**GLITS** (BBC/EBU stereo, `generators.py:generate_glits`)
-- Fixed 4-second cycle, repeats `repetitions` times
-- 1 kHz continuous on both channels
-- L: one 250 ms interruption at t=0
-- R: two 250 ms interruptions at t=500 ms and t=1000 ms
+**GLITS** (`generators.py:generate_glits`)
+- Fixed 4-second cycle, repeated `repetitions` times
+- 1 kHz continuous on both channels at −18 dBFS
+- L: one 250 ms interruption at t = 0
+- R: two 250 ms interruptions at t = 500 ms and t = 1000 ms
 
-**BLITS** (EBU Tech 3304 5.1, `generators.py:generate_blits`)
-- Fixed 13.4-second sequence, repeats `repetitions` times
+**BLITS** (`generators.py:generate_blits`)
+- Fixed 13.4-second sequence per EBU Tech 3304, repeated `repetitions` times
 - Channel order: L R C LFE Ls Rs (WAV WAVE_FORMAT_EXTENSIBLE)
-- S1 (0–4.8 s): sequential 600 ms channel ident bursts at unique frequencies
+- S1 (0–4.8 s): sequential 600 ms channel ident bursts at unique frequencies @ −18 dBFS
   - L=880 Hz, R=880 Hz, C=1320 Hz, LFE=82.5 Hz, Ls=660 Hz, Rs=660 Hz
-- S2 (4.8–10.2 s): stereo ident at 1 kHz; R continuous, L discontinuous pattern
-- S3 (10.2–13.4 s): all channels in-phase 2 kHz at (amplitude_dbfs − 6 dB)
+- S2 (4.8–10.2 s): stereo ident at 1 kHz @ −18 dBFS; R continuous, L discontinuous pattern
+- S3 (10.2–13.4 s): all channels in-phase 2 kHz @ −24 dBFS, 3 s on, 200 ms silence
 
 ### Python environment
 
@@ -65,6 +68,6 @@ python3 -m venv .venv
 
 ## Frontend
 
-- `src/components/ToneForm.tsx` — all controls and download logic
-- `src/components/StatusPanel.tsx` — status display and reference table
+- `src/components/ToneForm.tsx` — tone type selector, repetitions control, download logic
+- `src/components/StatusPanel.tsx` — status display and broadcast reference table
 - Vite proxy: `/api` → `http://localhost:8000`
