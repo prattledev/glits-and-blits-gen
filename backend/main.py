@@ -18,11 +18,13 @@ app.add_middleware(
 VALID_SAMPLE_RATES = {44100, 48000, 96000}
 
 
+ALIGNMENT_DBFS = -18.0  # EBU R68
+
+
 class ToneRequest(BaseModel):
     tone_type: Literal["glits", "blits"]
     repetitions: int = Field(1, ge=1, le=20)
     sample_rate: int = Field(48000)
-    amplitude_dbfs: float = Field(-18.0, ge=-60.0, le=0.0)
 
     @field_validator("sample_rate")
     @classmethod
@@ -36,10 +38,10 @@ class ToneRequest(BaseModel):
 async def generate_tone(req: ToneRequest):
     try:
         if req.tone_type == "glits":
-            audio = generate_glits(req.repetitions * 4.0, req.sample_rate, req.amplitude_dbfs)
+            audio = generate_glits(req.repetitions * 4.0, req.sample_rate, ALIGNMENT_DBFS)
             basename = f"GLITS_{req.sample_rate}Hz"
         else:
-            audio = generate_blits(req.sample_rate, req.amplitude_dbfs, req.repetitions)
+            audio = generate_blits(req.sample_rate, ALIGNMENT_DBFS, req.repetitions)
             basename = f"BLITS_{req.sample_rate}Hz"
 
         data = to_wav_bytes(audio, req.sample_rate)

@@ -8,7 +8,6 @@ interface FormState {
   toneType: ToneType
   repetitions: number
   sampleRate: SampleRate
-  amplitudeDbfs: number
 }
 
 interface Props {
@@ -67,7 +66,6 @@ export default function ToneForm({ generating, setGenerating, setStatus }: Props
     toneType: 'glits',
     repetitions: 1,
     sampleRate: 48000,
-    amplitudeDbfs: -18,
   })
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -89,7 +87,6 @@ export default function ToneForm({ generating, setGenerating, setStatus }: Props
           tone_type: form.toneType,
           repetitions: form.repetitions,
           sample_rate: form.sampleRate,
-          amplitude_dbfs: form.amplitudeDbfs,
         }),
       })
       if (!res.ok) {
@@ -165,46 +162,6 @@ export default function ToneForm({ generating, setGenerating, setStatus }: Props
           <div style={{ color: '#4b5563', fontSize: 11, marginTop: 4 }}>
             Total duration: {totalDuration} s
           </div>
-        </Field>
-      </div>
-
-      {/* Reference level */}
-      <div style={SECTION}>
-        <Field label="Reference Level">
-          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-            <input
-              type="range" min={-60} max={0} step={1}
-              value={form.amplitudeDbfs}
-              onChange={(e) => set('amplitudeDbfs', Number(e.target.value))}
-              style={{ flex: 1, accentColor: '#3b82f6' }}
-            />
-            <span style={{ color: '#93c5fd', fontSize: 13, minWidth: 52, textAlign: 'right' }}>
-              {form.amplitudeDbfs} dBFS
-            </span>
-          </div>
-          <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
-            {[
-              { label: '−18 EBU',   val: -18 },
-              { label: '−20 SMPTE', val: -20 },
-              { label: '−23 R128',  val: -23 },
-            ].map((p) => (
-              <button key={p.val} onClick={() => set('amplitudeDbfs', p.val)} style={{
-                padding: '3px 7px', fontSize: 10,
-                background: form.amplitudeDbfs === p.val ? '#1e3a5f' : '#131720',
-                border: `1px solid ${form.amplitudeDbfs === p.val ? '#2563eb' : '#1e2a38'}`,
-                borderRadius: 3,
-                color: form.amplitudeDbfs === p.val ? '#93c5fd' : '#6b7280',
-                cursor: 'pointer', fontFamily: 'inherit', flex: 1,
-              }}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-          {form.toneType === 'blits' && (
-            <div style={{ color: '#4b5563', fontSize: 11, marginTop: 6 }}>
-              Phase-check (S3) at {form.amplitudeDbfs - 6} dBFS (−6 dB)
-            </div>
-          )}
         </Field>
       </div>
 
