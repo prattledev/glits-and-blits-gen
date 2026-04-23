@@ -2,12 +2,10 @@ import { useState } from 'react'
 import type { StatusState } from '../App'
 
 type ToneType = 'glits' | 'blits'
-type SampleRate = 44100 | 48000 | 96000
 
 interface FormState {
   toneType: ToneType
   repetitions: number
-  sampleRate: SampleRate
 }
 
 interface Props {
@@ -32,40 +30,11 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
-function SegmentedControl<T extends string | number>({
-  value, options, onChange,
-}: {
-  value: T
-  options: { label: string; value: T }[]
-  onChange: (v: T) => void
-}) {
-  return (
-    <div style={{ display: 'flex', border: '1px solid #1e2a38', borderRadius: 4, overflow: 'hidden' }}>
-      {options.map((opt) => (
-        <button
-          key={String(opt.value)}
-          onClick={() => onChange(opt.value)}
-          style={{
-            flex: 1, padding: '7px 6px', fontSize: 12, fontFamily: 'inherit',
-            fontWeight: value === opt.value ? 700 : 400,
-            color: value === opt.value ? '#e2e8f0' : '#6b7280',
-            background: value === opt.value ? '#1e3a5f' : 'transparent',
-            border: 'none', borderRight: '1px solid #1e2a38',
-            cursor: 'pointer', transition: 'background 0.15s',
-          }}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 export default function ToneForm({ generating, setGenerating, setStatus }: Props) {
   const [form, setForm] = useState<FormState>({
     toneType: 'glits',
     repetitions: 1,
-    sampleRate: 48000,
   })
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -86,7 +55,6 @@ export default function ToneForm({ generating, setGenerating, setStatus }: Props
         body: JSON.stringify({
           tone_type: form.toneType,
           repetitions: form.repetitions,
-          sample_rate: form.sampleRate,
         }),
       })
       if (!res.ok) {
@@ -163,24 +131,6 @@ export default function ToneForm({ generating, setGenerating, setStatus }: Props
             Total duration: {totalDuration} s
           </div>
         </Field>
-      </div>
-
-      {/* Sample rate */}
-      <div style={SECTION}>
-        <Field label="Sample Rate">
-          <SegmentedControl
-            value={form.sampleRate}
-            options={[
-              { label: '44.1 kHz', value: 44100 },
-              { label: '48 kHz',   value: 48000 },
-              { label: '96 kHz',   value: 96000 },
-            ]}
-            onChange={(v) => set('sampleRate', v as SampleRate)}
-          />
-        </Field>
-        <div style={{ color: '#374151', fontSize: 11 }}>
-          PCM 24-bit WAV · WAVE_FORMAT_EXTENSIBLE
-        </div>
       </div>
 
       {/* Generate */}

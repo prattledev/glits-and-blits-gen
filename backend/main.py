@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 from typing import Literal
 
 from generators import generate_glits, generate_blits, to_wav_bytes
@@ -15,36 +15,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-VALID_SAMPLE_RATES = {44100, 48000, 96000}
-
-
+SAMPLE_RATE    = 48000
 ALIGNMENT_DBFS = -18.0  # EBU R68
 
 
 class ToneRequest(BaseModel):
     tone_type: Literal["glits", "blits"]
     repetitions: int = Field(1, ge=1, le=20)
-    sample_rate: int = Field(48000)
-
-    @field_validator("sample_rate")
-    @classmethod
-    def check_sample_rate(cls, v):
-        if v not in VALID_SAMPLE_RATES:
-            raise ValueError(f"sample_rate must be one of {VALID_SAMPLE_RATES}")
-        return v
 
 
 @app.post("/api/generate")
 async def generate_tone(req: ToneRequest):
     try:
         if req.tone_type == "glits":
-            audio = generate_glits(req.repetitions * 4.0, req.sample_rate, ALIGNMENT_DBFS)
-            basename = f"GLITS_{req.sample_rate}Hz"
+            audio    = generate_glits(req.repetitions * 4.0, SAMPLE_RATE, ALIGNMENT_DBFS)
+            basename = "GLITS_48kHz"
         else:
-            audio = generate_blits(req.sample_rate, ALIGNMENT_DBFS, req.repetitions)
-            basename = f"BLITS_{req.sample_rate}Hz"
+            audio    = generate_blits(SAMPLE_RATE, ALIGNMENT_DBFS, req.repetitions)
+            basename = "BLITS_48kHz"
 
-        data = to_wav_bytes(audio, req.sample_rate)
+        data     = to_wav_bytes(audio, SAMPLE_RATE)
         filename = f"{basename}_PCM24.wav"
 
     except Exception as e:
