@@ -18,6 +18,9 @@ docs/
 # Claude Code
 .claude/settings.local.json
 
+# Secrets
+.env
+
 # Editor
 .vscode/
 .idea/
