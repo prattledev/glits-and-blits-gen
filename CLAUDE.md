@@ -13,7 +13,7 @@ Generates spec-correct GLITS and BLITS line-up tones for broadcast audio enginee
 
 ```bash
 docker compose up --build
-# App: http://localhost:8000
+# App: http://localhost:8080
 ```
 
 Frontend is built by the nginx container (multi-stage); nginx proxies `/api` to the backend container.
