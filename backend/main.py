@@ -6,7 +6,7 @@ from typing import Literal
 
 from generators import generate_glits, generate_blits, to_wav_bytes
 
-app = FastAPI(title="Broadcast Test Tone Generator")
+app = FastAPI(title="GLITS & BLITS Generator")
 
 app.add_middleware(
     CORSMiddleware,
