@@ -4,7 +4,7 @@ const toneButtons  = document.querySelectorAll('.tone-btn');
 const slider       = document.getElementById('repetitions');
 const sliderValue  = document.getElementById('slider-value');
 const generateBtn  = document.getElementById('generate-btn');
-const status       = document.getElementById('status');
+const statusEl       = document.getElementById('statusEl');
 
 function updateSliderLabel() {
   const reps = Number(slider.value);
@@ -27,8 +27,8 @@ slider.addEventListener('input', updateSliderLabel);
 generateBtn.addEventListener('click', async () => {
   generateBtn.disabled    = true;
   generateBtn.textContent = 'Generating…';
-  status.textContent      = '';
-  status.className        = 'status';
+  statusEl.textContent      = '';
+  statusEl.className        = 'statusEl';
 
   try {
     const res = await fetch('/api/generate', {
@@ -39,7 +39,7 @@ generateBtn.addEventListener('click', async () => {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Unknown error' }));
-      throw new Error(err.detail || `HTTP ${res.status}`);
+      throw new Error(err.detail || `HTTP ${res.statusEl}`);
     }
 
     const blob        = await res.blob();
@@ -54,11 +54,11 @@ generateBtn.addEventListener('click', async () => {
     a.click();
     URL.revokeObjectURL(url);
 
-    status.textContent = `↓ ${filename}`;
-    status.className   = 'status ok';
+    statusEl.textContent = `↓ ${filename}`;
+    statusEl.className   = 'statusEl ok';
   } catch (e) {
-    status.textContent = e.message;
-    status.className   = 'status error';
+    statusEl.textContent = e.message;
+    statusEl.className   = 'statusEl error';
   } finally {
     generateBtn.disabled    = false;
     generateBtn.textContent = 'Generate & Download';
