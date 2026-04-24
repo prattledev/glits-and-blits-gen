@@ -60,33 +60,18 @@ Open **http://localhost:8080** in your browser, or via your Cloudflare tunnel UR
 
 ---
 
-## Development (without Docker)
+## Development (backend only)
 
-**Requirements:** Python 3.13+, Node.js 18+
-
-### Backend
+**Requirements:** Python 3.13+
 
 ```bash
 cd backend
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-```
-
-### Start
-
-```bash
 ./start.sh
 ```
 
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
+The full app (frontend + API proxy) requires Docker. `start.sh` starts the backend only.
 
 ---
 

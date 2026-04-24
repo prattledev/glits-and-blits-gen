@@ -4,11 +4,6 @@ backend/__pycache__/
 **/*.pyc
 **/*.pyo
 
-# Node
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-
 # macOS
 .DS_Store
 

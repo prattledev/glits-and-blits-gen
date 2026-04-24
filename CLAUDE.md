@@ -5,7 +5,7 @@ Generates spec-correct GLITS and BLITS line-up tones for broadcast audio enginee
 ## Stack
 
 - **Backend**: Python 3.13 + FastAPI — `backend/`
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS — `frontend/`
+- **Frontend**: Plain HTML/CSS/JS — `frontend/`
 
 ## Running
 
@@ -17,29 +17,25 @@ docker compose up --build
 # App: http://localhost:8080 or via Cloudflare tunnel
 ```
 
-Frontend is built by the nginx container (multi-stage); nginx proxies `/api` to the backend container.
+Frontend is served directly by nginx (no build step); nginx proxies `/api` to the backend container.
 
-### Manual (development)
+### Manual (backend only)
 
 ```bash
 ./start.sh
-# Backend:  http://localhost:8000
-# Frontend: http://localhost:5173
+# Backend API: http://localhost:8000
+# Full app requires Docker (nginx proxies /api)
 ```
 
 Or individually:
 ```bash
-# Backend
 cd backend && .venv/bin/uvicorn main:app --port 8000
-
-# Frontend
-cd frontend && npm run dev -- --port 5173
 ```
 
 ## Docker layout
 
 - `backend/Dockerfile` — python:3.13-slim + libsndfile1, runs uvicorn on port 8000 (internal only)
-- `frontend/Dockerfile` — multi-stage: node:22-alpine build → nginx:alpine serve
+- `frontend/Dockerfile` — nginx:alpine, copies static files directly (no build step)
 - `frontend/nginx.conf` — serves `/usr/share/nginx/html`, proxies `/api` → `http://backend:8000`
 - `docker-compose.yml` — frontend on 8080, backend internal, cloudflared tunnel
 - `.env` — `TUNNEL_TOKEN` (gitignored); copy from `.env.example`
@@ -88,8 +84,9 @@ python3 -m venv .venv
 
 ## Frontend
 
-Single page, centered layout. No decorative elements.
+Single page, centred layout. No build step, no dependencies.
 
-- `src/App.tsx` — page shell, centres `ToneForm`
-- `src/components/ToneForm.tsx` — tone type selector, repetitions slider, generate button, inline status
-- Vite proxy: `/api` → `http://localhost:8000` (dev only; nginx handles this in production)
+- `frontend/index.html` — markup
+- `frontend/style.css` — all styling
+- `frontend/app.js` — tone type selection, slider, generate/download, status
+- nginx proxies `/api` → `http://backend:8000`

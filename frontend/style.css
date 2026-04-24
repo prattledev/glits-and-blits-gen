@@ -1,0 +1,130 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a0a;
+  color: #c0c0c0;
+  font-family: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+
+.container { width: 340px; }
+
+.title {
+  color: #707070;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tone-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.tone-btn {
+  flex: 1;
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid #1e1e1e;
+  color: #383838;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.tone-btn.active {
+  background: #1a1a1a;
+  border-color: #3a3a3a;
+  color: #d0d0d0;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.label-text {
+  color: #2e2e2e;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.label-value {
+  color: #505050;
+  font-size: 11px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #3a3a3a;
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 12px 0;
+  background: #161616;
+  border: 1px solid #242424;
+  color: #a0a0a0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.generate-btn:disabled {
+  background: #0f0f0f;
+  color: #303030;
+  cursor: wait;
+}
+
+.status {
+  font-size: 11px;
+  text-align: center;
+  letter-spacing: 0.04em;
+  min-height: 16px;
+}
+
+.status.ok    { color: #3a5a3a; }
+.status.error { color: #5a3a3a; }
+
+.footer {
+  display: flex;
+  gap: 24px;
+}
+
+.footer a {
+  color: #2e2e2e;
+  display: flex;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer a:hover { color: #707070; }
