@@ -65,10 +65,8 @@ Open **http://localhost:8080** in your browser, or via your Cloudflare tunnel UR
 **Requirements:** Python 3.13+
 
 ```bash
-cd backend
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-./start.sh
+cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cd .. && ./start.sh
 ```
 
 The full app (frontend + API proxy) requires Docker. `start.sh` starts the backend only.

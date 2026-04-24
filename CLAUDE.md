@@ -53,6 +53,8 @@ Single endpoint: `POST /api/generate`
 
 Returns a 24-bit PCM WAV file (`WAVE_FORMAT_EXTENSIBLE`).
 
+Rate limited to **10 requests/minute per IP** via `slowapi`.
+
 All parameters are hardcoded per EBU spec:
 - Sample rate: **48 kHz**
 - Alignment level: **−18 dBFS** (EBU R68)
